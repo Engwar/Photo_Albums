@@ -14,7 +14,6 @@
 		9438DADE23FAD0DA00DDCDDC /* UsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438DADD23FAD0DA00DDCDDC /* UsersTableViewController.swift */; };
 		9438DAEA23FAD18100DDCDDC /* PhotosTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438DAE923FAD18100DDCDDC /* PhotosTableViewController.swift */; };
 		9438DAF223FAD24100DDCDDC /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438DAF123FAD24100DDCDDC /* DataService.swift */; };
-		9438DAF623FAD8F800DDCDDC /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438DAF523FAD8F800DDCDDC /* PhotoCell.swift */; };
 		9438DB1E23FAE6C400DDCDDC /* UsersByID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438DB1D23FAE6C400DDCDDC /* UsersByID.swift */; };
 		9438DB2023FAE6D600DDCDDC /* PhotosByID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438DB1F23FAE6D600DDCDDC /* PhotosByID.swift */; };
 		9438DB2223FAE98500DDCDDC /* ServiceErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438DB2123FAE98500DDCDDC /* ServiceErrors.swift */; };
@@ -23,6 +22,9 @@
 		9438DB2C23FAFB9200DDCDDC /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438DB2B23FAFB9200DDCDDC /* Repository.swift */; };
 		9438DB2E23FB086B00DDCDDC /* Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438DB2D23FB086B00DDCDDC /* Factory.swift */; };
 		9438DB3023FB1A4500DDCDDC /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438DB2F23FB1A4500DDCDDC /* Router.swift */; };
+		9438DB3223FB4B5100DDCDDC /* UserPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9438DB3123FB4B5100DDCDDC /* UserPresenter.swift */; };
+		9471020023FB5A5100C0B991 /* PhotoPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947101FF23FB5A5100C0B991 /* PhotoPresenter.swift */; };
+		9471020923FBECDA00C0B991 /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9471020823FBECDA00C0B991 /* Cell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,7 +37,6 @@
 		9438DADD23FAD0DA00DDCDDC /* UsersTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersTableViewController.swift; sourceTree = "<group>"; };
 		9438DAE923FAD18100DDCDDC /* PhotosTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosTableViewController.swift; sourceTree = "<group>"; };
 		9438DAF123FAD24100DDCDDC /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
-		9438DAF523FAD8F800DDCDDC /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		9438DB1D23FAE6C400DDCDDC /* UsersByID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersByID.swift; sourceTree = "<group>"; };
 		9438DB1F23FAE6D600DDCDDC /* PhotosByID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosByID.swift; sourceTree = "<group>"; };
 		9438DB2123FAE98500DDCDDC /* ServiceErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceErrors.swift; sourceTree = "<group>"; };
@@ -44,6 +45,9 @@
 		9438DB2B23FAFB9200DDCDDC /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		9438DB2D23FB086B00DDCDDC /* Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Factory.swift; sourceTree = "<group>"; };
 		9438DB2F23FB1A4500DDCDDC /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		9438DB3123FB4B5100DDCDDC /* UserPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPresenter.swift; sourceTree = "<group>"; };
+		947101FF23FB5A5100C0B991 /* PhotoPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPresenter.swift; sourceTree = "<group>"; };
+		9471020823FBECDA00C0B991 /* Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				9438DADD23FAD0DA00DDCDDC /* UsersTableViewController.swift */,
+				9438DB3123FB4B5100DDCDDC /* UserPresenter.swift */,
 				9438DB2F23FB1A4500DDCDDC /* Router.swift */,
 			);
 			path = "Users Module";
@@ -122,7 +127,8 @@
 			isa = PBXGroup;
 			children = (
 				9438DAE923FAD18100DDCDDC /* PhotosTableViewController.swift */,
-				9438DAF523FAD8F800DDCDDC /* PhotoCell.swift */,
+				947101FF23FB5A5100C0B991 /* PhotoPresenter.swift */,
+				9471020823FBECDA00C0B991 /* Cell.swift */,
 			);
 			path = "Photoes Module";
 			sourceTree = "<group>";
@@ -208,8 +214,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				9438DAEA23FAD18100DDCDDC /* PhotosTableViewController.swift in Sources */,
+				9471020023FB5A5100C0B991 /* PhotoPresenter.swift in Sources */,
 				9438DAF223FAD24100DDCDDC /* DataService.swift in Sources */,
 				9438DAC323FACA9200DDCDDC /* AppDelegate.swift in Sources */,
+				9438DB3223FB4B5100DDCDDC /* UserPresenter.swift in Sources */,
+				9471020923FBECDA00C0B991 /* Cell.swift in Sources */,
 				9438DB2C23FAFB9200DDCDDC /* Repository.swift in Sources */,
 				9438DB2423FAF54500DDCDDC /* Costants.swift in Sources */,
 				9438DB2E23FB086B00DDCDDC /* Factory.swift in Sources */,
@@ -219,7 +228,6 @@
 				9438DB2623FAF71300DDCDDC /* AlbumsByID.swift in Sources */,
 				9438DB3023FB1A4500DDCDDC /* Router.swift in Sources */,
 				9438DB2223FAE98500DDCDDC /* ServiceErrors.swift in Sources */,
-				9438DAF623FAD8F800DDCDDC /* PhotoCell.swift in Sources */,
 				9438DADE23FAD0DA00DDCDDC /* UsersTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

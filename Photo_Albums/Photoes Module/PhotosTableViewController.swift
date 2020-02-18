@@ -10,14 +10,13 @@ import UIKit
 
 class PhotosTableViewController: UITableViewController {
 
-	private let userID: Int
-	private var albums = [AlbumsByIDElement]()
-	private var photos = [PhotosByIDElement]()
-	private var repository: IUsersRepository
+	private var albumsByUser = [AlbumsByIDElement]()
+	private var photosInAlbum = [PhotosByIDElement]()
+	private var allPhotos = [[PhotosByIDElement]]()
+	private var presenter: IPhotoPresenter
 
-	init(userID: Int, repository: IUsersRepository){
-		self.userID = userID
-		self.repository = repository
+	init(presenter: IPhotoPresenter){
+		self.presenter = presenter
 		super.init(nibName: nil, bundle: nil)
 	}
 
@@ -32,11 +31,15 @@ class PhotosTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+		return presenter.getPhotos().count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+       guard let cell = tableView.dequeueReusableCell(withIdentifier: "photoCell", for: indexPath) as? PhotoCell
+		else { return UITableViewCell() }
+		let photo = presenter.getPhoto(by: indexPath.row)
+		cell.set(text: photo.title)
+		cell.set(photoImage: presenter.getImage(by: photo))
         return cell
     }
 }

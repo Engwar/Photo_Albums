@@ -10,14 +10,11 @@ import UIKit
 
 final class UsersTableViewController: UITableViewController {
 
+	private let presenter: IUserPresenter
 	private var users = [UsersByIDElement]()
-	private var repository: IUsersRepository
-	private var router: UsersRouter
-	private var activityIndicator = UIActivityIndicatorView(style: .large)
 
-	init(repository: IUsersRepository, router: UsersRouter) {
-		self.repository = repository
-		self.router = router
+	init(presenter: IUserPresenter) {
+		self.presenter = presenter
 		super.init(nibName: nil, bundle: nil)
 	}
 
@@ -29,55 +26,23 @@ final class UsersTableViewController: UITableViewController {
 	override func viewDidLoad() {
         super.viewDidLoad()
 		self.title = "Users"
-		setupUI()
-		loadUsers()
     }
 
-	private func loadUsers() {
-			self.repository.getUsers { [weak self] result in
-				guard let self = self else { return }
-				switch result {
-				case .success(let users):
-					self.users = users
-					self.tableView.reloadData()
-					self.activityIndicator.stopAnimating()
-				case .failure(.noData):
-					self.users = []
-				case .failure(.noResponse):
-					self.users = []
-				case .failure(.invalidURL( _)):
-					self.users = []
-				}
-			}
-	}
-
-	private func setupUI() {
-		activityIndicator.color = .black
-		activityIndicator.startAnimating()
-		view.addSubview(activityIndicator)
-		setConstraints()
-	}
-
-	private func setConstraints() {
-		activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-		NSLayoutConstraint.activate([
-			activityIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-			activityIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-		])
-	}
+	
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return users.count
+		return presenter.usersCount()
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
+		users = presenter.showUsers()
 		cell.textLabel?.text = users[indexPath.row].name
 		cell.accessoryType = .disclosureIndicator
         return cell
     }
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		router.showPhoto(with: indexPath.row + 1)
+		presenter.showAlbums(of: indexPath.row + 1)
 	}
 }

@@ -9,5 +9,6 @@
 import Foundation
 
 struct AlbumsByIDElement: Codable {
-    let userID, id: Int
+	let userId: Int
+	let id: Int
 }

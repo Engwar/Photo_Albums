@@ -12,14 +12,19 @@ final class ModulesFactory {
 	func getUsersModule() -> UsersTableViewController {
 		let repository = UsersRepository()
 		let router = UsersRouter(factory: self)
-		let usersTableViewController = UsersTableViewController(repository: repository, router: router)
+		let presenter = UserPresenter(repository: repository, router: router)
+		let usersTableViewController = UsersTableViewController(presenter: presenter)
 		router.viewController = usersTableViewController
+		presenter.getUsers()
+		presenter.userVC = usersTableViewController
 		return usersTableViewController
 	}
 
 	func getPhotosModule(with userID: Int) -> PhotosTableViewController {
 		let repository = UsersRepository()
-		let photosViewController = PhotosTableViewController(userID: userID, repository: repository)
+		let presenter = PhotoPresenter(userID: userID, repository: repository)
+		let photosViewController = PhotosTableViewController(presenter: presenter)
+		presenter.getAlbums()
 		return photosViewController
 	}
 }
