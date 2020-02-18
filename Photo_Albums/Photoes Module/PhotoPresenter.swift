@@ -10,51 +10,32 @@ import Foundation
 import UIKit
 
 protocol IPhotoPresenter {
-	func getPhotos() -> [PhotosByIDElement]
-	func photosCount() -> Int
-	func getAlbums()
-	func getPhoto(by iD: Int) -> PhotosByIDElement
-	func getImage(by photo: PhotosByIDElement) -> UIImage
+	func getPhotos()
+	func countPhotos() -> Int
 }
 
 final class PhotoPresenter {
+	
 	private let userID: Int
-	private var photo = UIImage()
-	private var albumsByUser = [AlbumsByIDElement]()
+	private var albumsByUser = [AlbumsByIDElement]() //получаем массив альбомов
 	private var photosInAlbums = [PhotosByIDElement]()
 	private var allPhotos = [[PhotosByIDElement]]()
 	private var repository: IUsersRepository
 	weak var photoVC: PhotosTableViewController?
+	private let loadPhotosQueue = DispatchQueue(label: "loadPhotosQueue", qos: .userInteractive, attributes: .concurrent)
 
 	init(userID: Int, repository: IUsersRepository){
 		self.userID = userID
 		self.repository = repository
 	}
 
-	private func loadAlbums() {
-		self.repository.getAlbums(by: userID) { [weak self] result in
-			guard let self = self else { return }
-			switch result {
-				case .success(let albums):
-					self.albumsByUser = albums
-					self.loadPhoto()
-				sleep(2)
-					self.photoVC?.tableView.reloadData()
-					print(self.photosInAlbums = self.allPhotos.flatMap{$0})
-				case .failure(.noData):
-					self.albumsByUser = []
-				case .failure(.noResponse):
-					self.albumsByUser = []
-				case .failure(.invalidURL( _)):
-					self.albumsByUser = []
-			}
-		}
-	}
 	private func loadPhoto() {
-		for album in albumsByUser {
-			self.repository.getPhotos(by: album.id) { [weak self] result in
-				guard let self = self else { return }
-				switch result {
+		loadPhotosQueue.async { [weak self] in
+			guard let self = self else { return }
+			for album in self.albumsByUser {
+				self.repository.getPhotos(by: album.id, completion: { [weak self] result in
+					guard let self = self else { return }
+					switch result {
 					case .success(let photos):
 						self.allPhotos.append(photos)
 					case .failure(.noData):
@@ -63,36 +44,39 @@ final class PhotoPresenter {
 						self.albumsByUser = []
 					case .failure(.invalidURL( _)):
 						self.albumsByUser = []
-				}
+					}
+					self.photosInAlbums = self.allPhotos.flatMap{$0}
+				})
 			}
 		}
 	}
 }
 
 extension PhotoPresenter: IPhotoPresenter {
-	func getImage(by photo: PhotosByIDElement) -> UIImage {
-		let imagePath = photo.url
-		if let url = URL(string: imagePath), let photoDataImage = try? Data(contentsOf: url){
-				if let photo = UIImage(data: photoDataImage) {
-					self.photo = photo
+	func getPhotos() {
+		loadPhotosQueue.async { [weak self] in
+			guard let self = self else { return }
+			self.repository.getAlbums(by: self.userID, completion: { [weak self] result in
+				guard let self = self else { return }
+				DispatchQueue.main.async {
+					switch result {
+					case .success(let albums):
+						self.albumsByUser = albums
+						self.loadPhoto()
+					case .failure(.noData):
+						self.albumsByUser = []
+					case .failure(.noResponse):
+						self.albumsByUser = []
+					case .failure(.invalidURL( _)):
+						self.albumsByUser = []
+					}
+					self.photoVC?.showPhotos(photos: self.photosInAlbums)
 				}
-			}
-		return self.photo
+				return
+			})
+		}
 	}
-
-	func getPhoto(by iD: Int) -> PhotosByIDElement {
-		return photosInAlbums[iD]
-	}
-
-	func getAlbums() {
-		loadAlbums()
-	}
-
-	func getPhotos() -> [PhotosByIDElement] {
-		photosInAlbums
-	}
-
-	func photosCount() -> Int {
-		photosInAlbums.count
+	func countPhotos() -> Int {
+		return photosInAlbums.count
 	}
 }

@@ -15,8 +15,8 @@ final class ModulesFactory {
 		let presenter = UserPresenter(repository: repository, router: router)
 		let usersTableViewController = UsersTableViewController(presenter: presenter)
 		router.viewController = usersTableViewController
-		presenter.getUsers()
 		presenter.userVC = usersTableViewController
+		presenter.getUsers()
 		return usersTableViewController
 	}
 
@@ -24,7 +24,8 @@ final class ModulesFactory {
 		let repository = UsersRepository()
 		let presenter = PhotoPresenter(userID: userID, repository: repository)
 		let photosViewController = PhotosTableViewController(presenter: presenter)
-		presenter.getAlbums()
+		presenter.photoVC = photosViewController
+		presenter.getPhotos()
 		return photosViewController
 	}
 }

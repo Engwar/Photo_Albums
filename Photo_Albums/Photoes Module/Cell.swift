@@ -14,10 +14,12 @@ final class PhotoCell: UITableViewCell {
 	private var titleLabel = UILabel()
 	private var photoView = UIImageView()
 	private var activityInd = UIActivityIndicatorView(style: .large)
-	static let cellId = "photoCell"
+	static let cellId = Constants.cellId
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
+		activityInd.startAnimating()
+		activityInd.isHidden = false
 		configureView()
 		setConstraints()
 	}
@@ -36,6 +38,7 @@ final class PhotoCell: UITableViewCell {
 		//titleLabel.adjustsFontSizeToFitWidth = true
 		photoView.contentMode = .scaleAspectFit
 		self.contentView.layer.cornerRadius = 6
+		self.contentView.layer.masksToBounds = true
 	}
 
 	private func setConstraints() {
@@ -45,7 +48,7 @@ final class PhotoCell: UITableViewCell {
 		NSLayoutConstraint.activate([
 			photoView.centerXAnchor.constraint(equalTo: centerXAnchor),
 			photoView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-			photoView.widthAnchor.constraint(equalTo: superview!.widthAnchor, multiplier: 0.95),
+			photoView.widthAnchor.constraint(equalToConstant: 80),
 			photoView.heightAnchor.constraint(equalTo: photoView.widthAnchor),
 			titleLabel.topAnchor.constraint(equalTo: photoView.bottomAnchor),
 			titleLabel.leadingAnchor.constraint(equalTo: photoView.leadingAnchor),
@@ -57,8 +60,10 @@ final class PhotoCell: UITableViewCell {
 		])
 	}
 
-	func set(photoImage: UIImage) {
+	func set(photoImage: UIImage?) {
 		self.photoView.image = photoImage
+		activityInd.stopAnimating()
+		activityInd.isHidden = true
 	}
 	func set(text: String?) {
 		titleLabel.text = text

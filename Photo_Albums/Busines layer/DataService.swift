@@ -14,7 +14,7 @@ typealias PhotosResult = Result<[PhotosByIDElement], ServiceError>
 
 final class DataService {
 	private let decoder = JSONDecoder()
-	private let session = URLSession(configuration: .default)
+	private let session = URLSession.shared
 	private var dataTask: URLSessionDataTask?
 	
 	func loadUsers(completion: @escaping (UsersResult) -> Void) {

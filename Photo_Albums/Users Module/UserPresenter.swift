@@ -10,8 +10,7 @@ import UIKit
 
 protocol IUserPresenter {
 	func getUsers()
-	func showAlbums(of userID: Int)
-	func usersCount() -> Int
+	func showPhotos(of userID: Int)
 	func showUsers() -> [UsersByIDElement]
 }
 
@@ -20,6 +19,7 @@ final class UserPresenter {
 	private var router: IUserRouter
 	weak var userVC: UsersTableViewController?
 	var users = [UsersByIDElement]()
+	private let loadUsersQueue = DispatchQueue(label: "loadUsersQueue", qos: .userInteractive, attributes: .concurrent)
 
 	init(repository: IUsersRepository, router: IUserRouter){
 		self.repository = repository
@@ -32,29 +32,28 @@ extension UserPresenter: IUserPresenter {
 		users
 	}
 
-	func usersCount() -> Int {
-		users.count
-	}
-
 	func getUsers() {
-			self.repository.getUsers { [weak self] result in
+		loadUsersQueue.async { [weak self] in
 			guard let self = self else { return }
-			switch result {
-			case .success(let users):
-				self.users = users
-				self.userVC?.tableView.reloadData()
-			case .failure(.noData):
-				self.users = []
-			case .failure(.noResponse):
-				self.users = []
-			case .failure(.invalidURL( _)):
-				self.users = []
+ 			self.repository.getUsers { [weak self] result in
+				guard let self = self else { return }
+					switch result {
+					case .success(let users):
+						self.users = users
+					case .failure(.noData):
+						self.users = []
+					case .failure(.noResponse):
+						self.users = []
+					case .failure(.invalidURL( _)):
+						self.users = []
+					}
+					self.userVC?.show(users: self.users)
 			}
 		}
 
 	}
 
-	func showAlbums(of userID: Int) {
-		router.showPhoto(with: userID)
+	func showPhotos(of userID: Int) {
+		router.showPhotos(with: userID)
 	}
 }

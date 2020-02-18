@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol IUserView {
+	func show(users: [UsersByIDElement])
+}
+
 final class UsersTableViewController: UITableViewController {
 
 	private let presenter: IUserPresenter
@@ -28,21 +32,25 @@ final class UsersTableViewController: UITableViewController {
 		self.title = "Users"
     }
 
-	
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return presenter.usersCount()
+		return users.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
-		users = presenter.showUsers()
 		cell.textLabel?.text = users[indexPath.row].name
 		cell.accessoryType = .disclosureIndicator
         return cell
     }
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		presenter.showAlbums(of: indexPath.row + 1)
+		presenter.showPhotos(of: indexPath.row + 1)
+	}
+}
+
+extension UsersTableViewController: IUserView {
+	func show(users: [UsersByIDElement]) {
+		self.users = users
+		self.tableView.reloadData()
 	}
 }

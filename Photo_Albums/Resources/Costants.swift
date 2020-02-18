@@ -14,4 +14,5 @@ enum Constants {
 	static let albums = "albums/"
 	static let slash = "/"
 	static let photos = "/photos"
+	static let cellId = "photoCell"
 }

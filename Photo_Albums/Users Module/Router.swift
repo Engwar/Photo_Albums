@@ -10,7 +10,7 @@ import Foundation
 
 protocol IUserRouter {
 
-	func showPhoto(with userId: Int)
+	func showPhotos(with userId: Int)
 }
 
 final class UsersRouter {
@@ -23,7 +23,7 @@ final class UsersRouter {
 }
 
 extension UsersRouter: IUserRouter {
-	func showPhoto(with userId: Int) {
+	func showPhotos(with userId: Int) {
 		let photoTableViewController = factory.getPhotosModule(with: userId)
 		viewController?.navigationController?.pushViewController(photoTableViewController, animated: true)
 	}
