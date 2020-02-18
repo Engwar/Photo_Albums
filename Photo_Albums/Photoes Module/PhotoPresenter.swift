@@ -22,7 +22,7 @@ final class PhotoPresenter {
 	private var allPhotos = [[PhotosByIDElement]]()
 	private var repository: IUsersRepository
 	weak var photoVC: PhotosTableViewController?
-	private let loadPhotosQueue = DispatchQueue(label: "loadPhotosQueue", qos: .userInteractive, attributes: .concurrent)
+	private let loadPhotosQueue = DispatchQueue(label: "loadPhotosQueue", qos: .userInteractive)
 
 	init(userID: Int, repository: IUsersRepository){
 		self.userID = userID
@@ -45,9 +45,10 @@ final class PhotoPresenter {
 					case .failure(.invalidURL( _)):
 						self.albumsByUser = []
 					}
-					self.photosInAlbums = self.allPhotos.flatMap{$0}
 				})
 			}
+			self.photosInAlbums = self.allPhotos.flatMap{$0}
+			self.photoVC?.showPhotos(photos: self.photosInAlbums)
 		}
 	}
 }
@@ -60,9 +61,9 @@ extension PhotoPresenter: IPhotoPresenter {
 				guard let self = self else { return }
 				DispatchQueue.main.async {
 					switch result {
-					case .success(let albums):
-						self.albumsByUser = albums
-						self.loadPhoto()
+					case .success(let albumsWithPhoto):
+						self.albumsByUser = albumsWithPhoto
+						print(albumsWithPhoto.count)
 					case .failure(.noData):
 						self.albumsByUser = []
 					case .failure(.noResponse):
@@ -70,9 +71,7 @@ extension PhotoPresenter: IPhotoPresenter {
 					case .failure(.invalidURL( _)):
 						self.albumsByUser = []
 					}
-					self.photoVC?.showPhotos(photos: self.photosInAlbums)
 				}
-				return
 			})
 		}
 	}

@@ -16,6 +16,8 @@ final class DataService {
 	private let decoder = JSONDecoder()
 	private let session = URLSession.shared
 	private var dataTask: URLSessionDataTask?
+
+	private var imagesCache = [NSCache<NSString, UIImage>]()//кэш
 	
 	func loadUsers(completion: @escaping (UsersResult) -> Void) {
 		if let url = URL(string: Constants.baseURL + Constants.users){
@@ -69,6 +71,7 @@ final class DataService {
 		}
 	}
 	func loadPhotos(_ albumID: Int, completion: @escaping(PhotosResult) -> Void) {
+
 		if let url = URL(string: Constants.baseURL + Constants.albums + String(albumID) + Constants.photos){
 			dataTask = session.dataTask(with: url) { data, _, error in
 				if let error = error {

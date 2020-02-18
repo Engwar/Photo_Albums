@@ -15,7 +15,7 @@ protocol IUserView {
 final class UsersTableViewController: UITableViewController {
 
 	private let presenter: IUserPresenter
-	private var users = [UsersByIDElement]()
+	private var usersinView = [UsersByIDElement]()
 
 	init(presenter: IUserPresenter) {
 		self.presenter = presenter
@@ -33,12 +33,12 @@ final class UsersTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return users.count
+		return usersinView.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
-		cell.textLabel?.text = users[indexPath.row].name
+		cell.textLabel?.text = usersinView[indexPath.row].name
 		cell.accessoryType = .disclosureIndicator
         return cell
     }
@@ -50,7 +50,7 @@ final class UsersTableViewController: UITableViewController {
 
 extension UsersTableViewController: IUserView {
 	func show(users: [UsersByIDElement]) {
-		self.users = users
+		self.usersinView = users
 		self.tableView.reloadData()
 	}
 }
