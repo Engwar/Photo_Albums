@@ -41,11 +41,7 @@ extension UserPresenter: IUserPresenter {
 					case .success(let users):
 						self.users = users
 					case .failure(.noData):
-						self.users = []
-					case .failure(.noResponse):
-						self.users = []
-					case .failure(.invalidURL( _)):
-						self.users = []
+						print(Error.self)
 					}
 					self.userVC?.show(users: self.users)
 			}

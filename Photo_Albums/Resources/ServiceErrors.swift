@@ -11,6 +11,4 @@ import Foundation
 enum ServiceError: Error
 {
 	case noData
-	case invalidURL(Error)
-	case noResponse
 }

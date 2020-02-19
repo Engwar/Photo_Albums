@@ -17,12 +17,12 @@ protocol IPhotoPresenter {
 final class PhotoPresenter {
 	
 	private let userID: Int
-	private var albumsByUser = [AlbumsByIDElement]() //получаем массив альбомов
+	private var albumsByUser = [AlbumsByIDElement]() 
 	private var photosInAlbums = [PhotosByIDElement]()
 	private var allPhotos = [[PhotosByIDElement]]()
 	private var repository: IUsersRepository
 	weak var photoVC: PhotosTableViewController?
-	private let loadPhotosQueue = DispatchQueue(label: "loadPhotosQueue", qos: .userInteractive)
+	private let loadPhotosQueue = DispatchQueue(label: "loadPhotosQueue", qos: .userInteractive, attributes: .concurrent)
 
 	init(userID: Int, repository: IUsersRepository){
 		self.userID = userID
@@ -32,23 +32,23 @@ final class PhotoPresenter {
 	private func loadPhoto() {
 		loadPhotosQueue.async { [weak self] in
 			guard let self = self else { return }
-			for album in self.albumsByUser {
-				self.repository.getPhotos(by: album.id, completion: { [weak self] result in
-					guard let self = self else { return }
-					switch result {
-					case .success(let photos):
-						self.allPhotos.append(photos)
-					case .failure(.noData):
-						self.albumsByUser = []
-					case .failure(.noResponse):
-						self.albumsByUser = []
-					case .failure(.invalidURL( _)):
-						self.albumsByUser = []
-					}
-				})
+			DispatchQueue.main.async {
+				for album in self.albumsByUser {
+					self.repository.getPhotos(by: album.id, completion: { [weak self] result in
+						guard let self = self else { return }
+						switch result {
+						case .success(let photosInAlb):
+							self.allPhotos.append(photosInAlb)
+							print(photosInAlb.count)
+						case .failure(.noData):
+							print(Error.self)
+						}
+					})
 			}
-			self.photosInAlbums = self.allPhotos.flatMap{$0}
-			self.photoVC?.showPhotos(photos: self.photosInAlbums)
+				self.photosInAlbums = self.allPhotos.flatMap{$0}
+				print(self.photosInAlbums.count)
+				self.photoVC?.showPhotos(photos: self.photosInAlbums)
+			}
 		}
 	}
 }
@@ -63,13 +63,12 @@ extension PhotoPresenter: IPhotoPresenter {
 					switch result {
 					case .success(let albumsWithPhoto):
 						self.albumsByUser = albumsWithPhoto
-						print(albumsWithPhoto.count)
+						print(albumsWithPhoto)
+						DispatchQueue.main.async {  
+							self.loadPhoto()
+						}
 					case .failure(.noData):
-						self.albumsByUser = []
-					case .failure(.noResponse):
-						self.albumsByUser = []
-					case .failure(.invalidURL( _)):
-						self.albumsByUser = []
+						print(Error.self)
 					}
 				}
 			})

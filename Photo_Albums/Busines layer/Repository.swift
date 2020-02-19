@@ -23,8 +23,8 @@ extension UsersRepository: IUsersRepository {
 		self.dataService.loadUsers { result in
 			DispatchQueue.main.async {
 				switch result {
-				case .success(let users):
-					completion(.success(users))
+				case .success(let people):
+					completion(.success(people))
 				case .failure(let error):
 					completion(.failure(.noData))
 					print(error)
@@ -37,8 +37,8 @@ extension UsersRepository: IUsersRepository {
 		self.dataService.loadPhotos(albumID) { result in
 			DispatchQueue.main.async {
 				switch result {
-				case .success(let photos):
-					completion(.success(photos))
+				case .success(let images):
+					completion(.success(images))
 				case .failure(let error):
 					completion(.failure(.noData))
 					print(error)
