@@ -44,10 +44,12 @@ final class PhotoPresenter {
 							print(Error.self)
 						}
 					})
+				}
 			}
-				self.photosInAlbums = self.allPhotos.flatMap{$0}
-				print(self.photosInAlbums.count)
+			self.photosInAlbums = self.allPhotos.flatMap{$0}
+			DispatchQueue.main.async {
 				self.photoVC?.showPhotos(photos: self.photosInAlbums)
+				print(self.photosInAlbums.count)
 			}
 		}
 	}

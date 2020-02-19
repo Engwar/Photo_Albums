@@ -11,7 +11,6 @@ import UIKit
 protocol IUserPresenter {
 	func getUsers()
 	func showPhotos(of userID: Int)
-	func showUsers() -> [UsersByIDElement]
 }
 
 final class UserPresenter {
@@ -28,15 +27,13 @@ final class UserPresenter {
 }
 
 extension UserPresenter: IUserPresenter {
-	func showUsers() -> [UsersByIDElement] {
-		users
-	}
 
 	func getUsers() {
 		loadUsersQueue.async { [weak self] in
 			guard let self = self else { return }
  			self.repository.getUsers { [weak self] result in
 				guard let self = self else { return }
+				DispatchQueue.main.async {
 					switch result {
 					case .success(let users):
 						self.users = users
@@ -44,6 +41,8 @@ extension UserPresenter: IUserPresenter {
 						print(Error.self)
 					}
 					self.userVC?.show(users: self.users)
+					self.userVC?.tableView.reloadData()
+				}
 			}
 		}
 
