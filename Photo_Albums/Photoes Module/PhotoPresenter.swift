@@ -30,7 +30,7 @@ final class PhotoPresenter {
 	}
 
 	private func loadPhoto() {
-		loadPhotosQueue.async { [weak self] in
+		loadPhotosQueue.sync { [weak self] in
 			guard let self = self else { return }
 			for album in self.albumsByUser {
 				self.repository.getPhotos(by: album.id, completion: { [weak self] result in
@@ -38,12 +38,14 @@ final class PhotoPresenter {
 					switch result {
 					case .success(let photosInAlb):
 						self.allPhotos.append(photosInAlb)
-						print(photosInAlb.count)
+						print(self.allPhotos.count)
 					case .failure(.noData):
 						print(Error.self)
 					}
 				})
 			}
+		}
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 			self.photosInAlbums = self.allPhotos.flatMap{$0}
 			self.photoVC?.showPhotos(photos: self.photosInAlbums)
 		}

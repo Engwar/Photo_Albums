@@ -50,8 +50,8 @@ final class UsersTableViewController: UITableViewController {
 
 extension UsersTableViewController: IUserView {
 	func show(users: [UsersByIDElement]) {
-		self.usersInView = users
 		DispatchQueue.main.async {
+		self.usersInView = users
 			self.tableView.reloadData()
 		}
 	}

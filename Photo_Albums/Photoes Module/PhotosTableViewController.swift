@@ -76,8 +76,8 @@ class PhotosTableViewController: UITableViewController {
 
 extension PhotosTableViewController: IPhotosView {
 	func showPhotos(photos: [PhotosByIDElement]) {
-		self.photosInAlbums = photos
 		DispatchQueue.main.async {
+		self.photosInAlbums = photos
 			self.tableView.reloadData()
 		}
 	}
