@@ -38,14 +38,13 @@ final class PhotoPresenter {
 					switch result {
 					case .success(let photosInAlb):
 						self.allPhotos.append(photosInAlb)
-						print(self.allPhotos.count)
 					case .failure(.noData):
 						print(Error.self)
 					}
 				})
 			}
 		}
-		DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+		DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
 			self.photosInAlbums = self.allPhotos.flatMap{$0}
 			self.photoVC?.showPhotos(photos: self.photosInAlbums)
 		}
@@ -61,7 +60,6 @@ extension PhotoPresenter: IPhotoPresenter {
 					switch result {
 					case .success(let albumsWithPhoto):
 						self.albumsByUser = albumsWithPhoto
-						print(albumsWithPhoto)
 						self.loadPhoto()
 					case .failure(.noData):
 						print(Error.self)

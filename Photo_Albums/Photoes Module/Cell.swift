@@ -18,6 +18,14 @@ final class PhotoCell: UITableViewCell {
 
 	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
 		super.init(style: style, reuseIdentifier: reuseIdentifier)
+		backgroundColor = .clear
+		layer.masksToBounds = false
+		layer.shadowOpacity = 0.23
+		layer.shadowRadius = 4
+		layer.shadowOffset = CGSize(width: 0, height: 0)
+		layer.shadowColor = CGColor(srgbRed: 0, green: 0, blue: 0, alpha: 1)
+		contentView.backgroundColor = .white
+		contentView.layer.cornerRadius = 8
 		activityInd.startAnimating()
 		activityInd.isHidden = false
 		configureView()
@@ -37,8 +45,6 @@ final class PhotoCell: UITableViewCell {
 		titleLabel.numberOfLines = 0
 		//titleLabel.adjustsFontSizeToFitWidth = true
 		photoView.contentMode = .scaleAspectFit
-		self.contentView.layer.cornerRadius = 6
-		self.contentView.layer.masksToBounds = true
 	}
 
 	private func setConstraints() {
@@ -48,7 +54,7 @@ final class PhotoCell: UITableViewCell {
 		NSLayoutConstraint.activate([
 			photoView.centerXAnchor.constraint(equalTo: centerXAnchor),
 			photoView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-			photoView.widthAnchor.constraint(equalToConstant: 80),
+			photoView.widthAnchor.constraint(equalToConstant: 400),
 			photoView.heightAnchor.constraint(equalTo: photoView.widthAnchor),
 			titleLabel.topAnchor.constraint(equalTo: photoView.bottomAnchor),
 			titleLabel.leadingAnchor.constraint(equalTo: photoView.leadingAnchor),
