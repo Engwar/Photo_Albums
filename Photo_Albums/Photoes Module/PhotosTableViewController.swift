@@ -16,10 +16,15 @@ class PhotosTableViewController: UITableViewController {
 
 	private var photosInAlbums = [PhotosByIDElement]()
 	private var presenter: IPhotoPresenter
+	private var imageCache = NSCache<NSString, UIImage>()
 
 	init(presenter: IPhotoPresenter){
 		self.presenter = presenter
 		super.init(nibName: nil, bundle: nil)
+	}
+
+	deinit {
+		print("photoController dead")
 	}
 
 	@available(*, unavailable)
@@ -33,11 +38,15 @@ class PhotosTableViewController: UITableViewController {
 		cell.set(text: photo.title)
 		DispatchQueue(label: "loadPhoto", qos: .userInteractive, attributes: .concurrent).async {
 			if let url = URL(string: photo.url){
-				let photoData = try? Data(contentsOf: url)
-				DispatchQueue.main.async {
-					if let photo = photoData {
-						cell.set(photoImage: UIImage(data: photo))
-						cell.layoutSubviews()
+				if let cachedImage = self.imageCache.object(forKey: url.absoluteString as NSString){
+					cell.set(photoImage: cachedImage)
+				} else {
+					let photoData = try? Data(contentsOf: url)
+					DispatchQueue.main.async {
+						if let photo = photoData {
+							cell.set(photoImage: UIImage(data: photo))
+							cell.layoutSubviews()
+						}
 					}
 				}
 			}
