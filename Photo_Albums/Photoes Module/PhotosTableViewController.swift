@@ -43,8 +43,9 @@ class PhotosTableViewController: UITableViewController {
 				} else {
 					let photoData = try? Data(contentsOf: url)
 					DispatchQueue.main.async {
-						if let photo = photoData {
-							cell.set(photoImage: UIImage(data: photo))
+						if let photo = photoData, let image = UIImage(data: photo) {
+							cell.set(photoImage: image)
+							self.imageCache.setObject(image, forKey: url.absoluteString as NSString)
 							cell.layoutSubviews()
 						}
 					}
