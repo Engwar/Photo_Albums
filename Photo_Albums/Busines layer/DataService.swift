@@ -23,14 +23,10 @@ final class DataService {
 				if let data = data {
 					do {
 						let object = try self.decoder.decode([UsersByIDElement].self, from: data)
-						DispatchQueue.main.async {
-							completion(.success(object))
-						}
+						completion(.success(object))
 					}
 					catch {
-						DispatchQueue.main.async {
-							completion(.failure(.noData))
-						}
+						completion(.failure(.noData))
 					}
 				}
 			}
@@ -44,35 +40,26 @@ final class DataService {
 				if let data = data {
 					do {
 						let object = try self.decoder.decode([AlbumsByIDElement].self, from: data)
-						DispatchQueue.main.async {
-							completion(.success(object))
-						}
+						completion(.success(object))
 					}
 					catch {
-						DispatchQueue.main.async {
-							completion(.failure(.noData))
-						}
+						completion(.failure(.noData))
 					}
 				}
 			}
-		 dataTask?.resume()
+			dataTask?.resume()
 		}
 	}
 	func loadPhotos(_ albumID: Int, completion: @escaping(PhotosResult) -> Void) {
-
 		if let url = URL(string: Constants.baseURL + Constants.albums + String(albumID) + Constants.photos){
 			dataTask = session.dataTask(with: url) { data, _, error in
 				if let data = data {
 					do {
 						let object = try self.decoder.decode([PhotosByIDElement].self, from: data)
-						DispatchQueue.main.async {
-							completion(.success(object))
-						}
+						completion(.success(object))
 					}
 					catch {
-						DispatchQueue.main.async {
-							completion(.failure(.noData))
-						}
+						completion(.failure(.noData))
 					}
 				}
 			}

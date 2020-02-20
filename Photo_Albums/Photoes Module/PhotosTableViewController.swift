@@ -36,14 +36,16 @@ class PhotosTableViewController: UITableViewController {
 		let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellId) as! PhotoCell
 		let photo = photosInAlbums[index]
 		cell.set(text: photo.title)
-		DispatchQueue(label: "loadPhoto", qos: .userInteractive, attributes: .concurrent).async {
+		DispatchQueue.global(qos: .utility).async {
 			if let url = URL(string: photo.url){
 				if let cachedImage = self.imageCache.object(forKey: url.absoluteString as NSString){
-					cell.set(photoImage: cachedImage)
+					DispatchQueue.main.async {
+						cell.set(photoImage: cachedImage)
+					}
 				} else {
 					let photoData = try? Data(contentsOf: url)
-					DispatchQueue.main.async {
-						if let photo = photoData, let image = UIImage(data: photo) {
+					if let photo = photoData, let image = UIImage(data: photo) {
+						DispatchQueue.main.async {
 							cell.set(photoImage: image)
 							self.imageCache.setObject(image, forKey: url.absoluteString as NSString)
 							cell.layoutSubviews()
@@ -75,7 +77,9 @@ class PhotosTableViewController: UITableViewController {
 extension PhotosTableViewController: IPhotosView {
 	func showPhotos(photos: [PhotosByIDElement]) {
 		self.photosInAlbums = photos
-		self.tableView.reloadData()
+		DispatchQueue.main.async {
+			self.tableView.reloadData()
+		}
 	}
 
 }

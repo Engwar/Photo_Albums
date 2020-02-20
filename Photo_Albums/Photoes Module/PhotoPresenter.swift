@@ -22,7 +22,7 @@ final class PhotoPresenter {
 	private var allPhotos = [[PhotosByIDElement]]()
 	private var repository: IUsersRepository
 	weak var photoVC: PhotosTableViewController?
-	private let loadPhotosQueue = DispatchQueue(label: "loadPhotosQueue", qos: .userInteractive, attributes: .concurrent)
+	private let loadPhotosQueue = DispatchQueue.global(qos: .userInitiated)
 
 	init(userID: Int, repository: IUsersRepository){
 		self.userID = userID
@@ -32,25 +32,20 @@ final class PhotoPresenter {
 	private func loadPhoto() {
 		loadPhotosQueue.async { [weak self] in
 			guard let self = self else { return }
-			DispatchQueue.main.async {
-				for album in self.albumsByUser {
-					self.repository.getPhotos(by: album.id, completion: { [weak self] result in
-						guard let self = self else { return }
-						switch result {
-						case .success(let photosInAlb):
-							self.allPhotos.append(photosInAlb)
-							print(photosInAlb.count)
-						case .failure(.noData):
-							print(Error.self)
-						}
-					})
-				}
+			for album in self.albumsByUser {
+				self.repository.getPhotos(by: album.id, completion: { [weak self] result in
+					guard let self = self else { return }
+					switch result {
+					case .success(let photosInAlb):
+						self.allPhotos.append(photosInAlb)
+						print(photosInAlb.count)
+					case .failure(.noData):
+						print(Error.self)
+					}
+				})
 			}
 			self.photosInAlbums = self.allPhotos.flatMap{$0}
-			DispatchQueue.main.async {
-				self.photoVC?.showPhotos(photos: self.photosInAlbums)
-				print(self.photosInAlbums.count)
-			}
+			self.photoVC?.showPhotos(photos: self.photosInAlbums)
 		}
 	}
 }
@@ -61,17 +56,13 @@ extension PhotoPresenter: IPhotoPresenter {
 			guard let self = self else { return }
 			self.repository.getAlbums(by: self.userID, completion: { [weak self] result in
 				guard let self = self else { return }
-				DispatchQueue.main.async {
 					switch result {
 					case .success(let albumsWithPhoto):
 						self.albumsByUser = albumsWithPhoto
 						print(albumsWithPhoto)
-						DispatchQueue.main.async {  
-							self.loadPhoto()
-						}
+						self.loadPhoto()
 					case .failure(.noData):
 						print(Error.self)
-					}
 				}
 			})
 		}

@@ -9,6 +9,7 @@
 import Foundation
 
 final class ModulesFactory {
+	
 	func getUsersModule() -> UsersTableViewController {
 		let repository = UsersRepository()
 		let router = UsersRouter(factory: self)

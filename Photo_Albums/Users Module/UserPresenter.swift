@@ -17,8 +17,8 @@ final class UserPresenter {
 	private var repository: IUsersRepository
 	private var router: IUserRouter
 	weak var userVC: UsersTableViewController?
-	var users = [UsersByIDElement]()
-	private let loadUsersQueue = DispatchQueue(label: "loadUsersQueue", qos: .userInteractive, attributes: .concurrent)
+	private var users = [UsersByIDElement]()
+	private let loadUsersQueue = DispatchQueue.global(qos: .utility)
 
 	init(repository: IUsersRepository, router: IUserRouter){
 		self.repository = repository
@@ -33,7 +33,6 @@ extension UserPresenter: IUserPresenter {
 			guard let self = self else { return }
  			self.repository.getUsers { [weak self] result in
 				guard let self = self else { return }
-				DispatchQueue.main.async {
 					switch result {
 					case .success(let users):
 						self.users = users
@@ -41,11 +40,8 @@ extension UserPresenter: IUserPresenter {
 						print(Error.self)
 					}
 					self.userVC?.show(users: self.users)
-					self.userVC?.tableView.reloadData()
-				}
 			}
 		}
-
 	}
 
 	func showPhotos(of userID: Int) {

@@ -21,42 +21,36 @@ final class UsersRepository {
 extension UsersRepository: IUsersRepository {
 	func getUsers(_ completion: @escaping (UsersResult) -> Void) {
 		self.dataService.loadUsers { result in
-			DispatchQueue.main.async {
-				switch result {
-				case .success(let people):
-					completion(.success(people))
-				case .failure(let error):
-					completion(.failure(.noData))
-					print(error)
-				}
+			switch result {
+			case .success(let people):
+				completion(.success(people))
+			case .failure(let error):
+				completion(.failure(.noData))
+				print(error)
 			}
 		}
 	}
-
+	
 	func getPhotos(by albumID: Int, completion: @escaping (PhotosResult) -> Void) {
 		self.dataService.loadPhotos(albumID) { result in
-			DispatchQueue.main.async {
-				switch result {
-				case .success(let images):
-					completion(.success(images))
-				case .failure(let error):
-					completion(.failure(.noData))
-					print(error)
-				}
+			switch result {
+			case .success(let images):
+				completion(.success(images))
+			case .failure(let error):
+				completion(.failure(.noData))
+				print(error)
 			}
 		}
 	}
-
+	
 	func getAlbums(by userID: Int, completion: @escaping (AlbumsResult) -> Void) {
 		self.dataService.loadAlbums(userID) { result in
-			DispatchQueue.main.async {
-				switch result {
-				case .success(let albums):
-					completion(.success(albums))
-				case .failure(let error):
-					completion(.failure(.noData))
-					print(error)
-				}
+			switch result {
+			case .success(let albums):
+				completion(.success(albums))
+			case .failure(let error):
+				completion(.failure(.noData))
+				print(error)
 			}
 		}
 	}
