@@ -32,6 +32,11 @@ class PhotosTableViewController: UITableViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+		self.tableView.contentInset = UIEdgeInsets(top: 0, left: 10, bottom: 20, right: 10)
+	}
+
 	private func setCell(of index: Int) -> UITableViewCell{
 		let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellId) as! PhotoCell
 		let photo = photosInAlbums[index]
@@ -77,7 +82,7 @@ class PhotosTableViewController: UITableViewController {
 extension PhotosTableViewController: IPhotosView {
 	func showPhotos(photos: [PhotosByIDElement]) {
 		DispatchQueue.main.async {
-		self.photosInAlbums = photos
+			self.photosInAlbums = photos
 			self.tableView.reloadData()
 		}
 	}

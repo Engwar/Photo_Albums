@@ -19,7 +19,7 @@ final class DataService {
 	
 	func loadUsers(completion: @escaping (UsersResult) -> Void) {
 		if let url = URL(string: Constants.baseURL + Constants.users){
-			dataTask = session.dataTask(with: url) { data, _, error in
+			session.dataTask(with: url) { data, _, error in
 				if let data = data {
 					do {
 						let object = try self.decoder.decode([UsersByIDElement].self, from: data)
@@ -29,14 +29,13 @@ final class DataService {
 						completion(.failure(.noData))
 					}
 				}
-			}
-			dataTask?.resume()
+			}.resume()
 		}
 	}
 
 	func loadAlbums(_ userID: Int, completion: @escaping(AlbumsResult) -> Void) {
 		if let url = URL(string: Constants.baseURL + Constants.users + String(userID) + Constants.slash + Constants.albums){
-			dataTask = session.dataTask(with: url) { data, _, error in
+			session.dataTask(with: url) { data, _, error in
 				if let data = data {
 					do {
 						let object = try self.decoder.decode([AlbumsByIDElement].self, from: data)
@@ -46,13 +45,12 @@ final class DataService {
 						completion(.failure(.noData))
 					}
 				}
-			}
-			dataTask?.resume()
+			}.resume()
 		}
 	}
 	func loadPhotos(_ albumID: Int, completion: @escaping(PhotosResult) -> Void) {
 		if let url = URL(string: Constants.baseURL + Constants.albums + String(albumID) + Constants.photos){
-			dataTask = session.dataTask(with: url) { data, _, error in
+			session.dataTask(with: url) { data, _, error in
 				if let data = data {
 					do {
 						let object = try self.decoder.decode([PhotosByIDElement].self, from: data)
@@ -62,8 +60,7 @@ final class DataService {
 						completion(.failure(.noData))
 					}
 				}
-			}
-			dataTask?.resume()
+			}.resume()
 		}
 	}
 }
